@@ -12,47 +12,64 @@
 # retorna mínimo de trocas = 2
 
 # Solução:
+# Varrer o vetor da esquerda para direita:
+#   Seleciona a primeira posição:
+#       varre o vetor novamente procurando se tem um numero menor que a posição atual
+#       se tiver, realiza a troca, não mexe novamente na primeira posição e contabiliza troca
+#       se não tiver, não realiza nenhuma troca e não mexe novamente na primeira posição
+# o looping deve ocorrer até que o número atual esteja na última posição
 
+from functools import reduce
 
 def encontraMenorNumeroDeTrocas(arr):
-    print(arr)
 
-    # numero de trocas iniciando em 0
+    # numero de trocas inicia em 0
     swap = 0
 
-    # pivot recebe primeiro elemento do vetor
-    pivot = arr[0]
+    # tamanho do vetor recebido
+    n = len(arr)
+    ultima_pos = n-1
 
-    # verificação ocorrerá até que o pivot seja a última posição do vetor
-    ultima_posicao = len(arr) - 1
-    while arr.index(pivot) != ultima_posicao:
+    #pos = 0
+    #while pos != ultima_pos:
 
-        # varrendo o vetor da direita para a esquerda
-        for i in reversed(arr):
+    for pos_i,i in enumerate(arr):
 
-            # se i for menor que pivot, realiza a troca e para iteração
-            if i<pivot:
-                pos_pivot = arr.index(pivot)
-                pos_i = arr.index(i)
+        #dif_pos_atual = i-pos_i
+        #print('verifica: ',dif_pos_atual)
 
-                arr[pos_pivot]=i
-                arr[pos_i]=pivot
+        menores = []
 
-                swap = swap + 1
+        # verifica se existe outro número na lista em que a diferença dê menor  que a diferença  anterior
+        for pos_j,j in enumerate(arr):
 
-                pivot = i
-                break
+            if pos_j <= pos_i:
+                continue
 
-            if i == pivot:
-                nova_pos_pivot = pos_pivot+1
-                pos_pivot = nova_pos_pivot
-                pivot = arr[pos_pivot]
-                break
+            if j<i:
+                menores.append(j)
+
+        # encontra o menor número entre os menores que i e realiza a troca:
+        encontra_menor = lambda x,y: x if x<y else y
+
+        # se existir valores menores, verifica o menor e realiza a troca
+        if menores:
+            menor = reduce(encontra_menor, menores)
+
+            # realiza a troca:
+            pos_menor = arr.index(menor)
+            pos_i = arr.index(i)
+
+            arr[pos_menor] = i
+            arr[pos_i] = menor
+
+            swap = swap + 1
 
     print(swap,arr)
     return(swap)
 
 
 #arr = [7,5,8,9,2,13,4,10,11]
-arr = [3,4,2,5,1]
+#arr = [3,4,2,5,1]
+arr = [7,15,12,3]
 encontraMenorNumeroDeTrocas(arr)
